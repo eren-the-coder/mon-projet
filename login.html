@@ -1,12 +1,285 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>connexion</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Connexion • Mon Projet</title>
+  <meta name="description" content="Connectez-vous à votre compte pour accéder à votre espace dans Mon Projet." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-soft: #111834;
+      --text: #e6e9f0;
+      --muted: #b9bfd1;
+      --primary: #5b8cff;
+      --primary-600: #3c6df0;
+      --card: #0f1530;
+      --ring: rgba(91, 140, 255, 0.45);
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+      --danger: #ff6b6b;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #ffffff;
+        --bg-soft: #f7f9fc;
+        --text: #0f172a;
+        --muted: #4b5563;
+        --primary: #315efb;
+        --primary-600: #2349d8;
+        --card: #ffffff;
+        --ring: rgba(49, 94, 251, 0.2);
+        --shadow: 0 10px 30px rgba(0,0,0,0.08);
+        --danger: #e11d48;
+      }
+    }
+
+    /* Thèmes forcés via attribut data-theme */
+    [data-theme="dark"] {
+      --bg: #0b1020;
+      --bg-soft: #111834;
+      --text: #e6e9f0;
+      --muted: #b9bfd1;
+      --primary: #5b8cff;
+      --primary-600: #3c6df0;
+      --card: #0f1530;
+      --ring: rgba(91, 140, 255, 0.45);
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+      --danger: #ff6b6b;
+    }
+    [data-theme="light"] {
+      --bg: #ffffff;
+      --bg-soft: #f7f9fc;
+      --text: #0f172a;
+      --muted: #4b5563;
+      --primary: #315efb;
+      --primary-600: #2349d8;
+      --card: #ffffff;
+      --ring: rgba(49, 94, 251, 0.2);
+      --shadow: 0 10px 30px rgba(0,0,0,0.08);
+      --danger: #e11d48;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; }
+    body {
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";
+      background: radial-gradient(1200px 600px at 10% -10%, rgba(91,140,255,0.18), transparent 60%),
+                  radial-gradient(900px 500px at 90% -20%, rgba(91,140,255,0.12), transparent 50%),
+                  var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100dvh;
+    }
+
+    .skip-link { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+    .skip-link:focus { left: 16px; top: 16px; width: auto; height: auto; background: var(--primary); color: #fff; padding: 8px 12px; border-radius: 8px; }
+
+    .container { width: min(1100px, 92vw); margin: 0 auto; }
+
+    /* Header */
+    .site-header { position: sticky; top: 0; z-index: 50; backdrop-filter: saturate(150%) blur(8px); background: color-mix(in oklab, var(--bg) 86%, transparent); border-bottom: 1px solid color-mix(in oklab, var(--text) 20%, transparent); }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: 0.3px; }
+    .logo { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, var(--primary), var(--primary-600)); box-shadow: 0 8px 20px var(--ring); display: grid; place-items: center; color: #fff; font-weight: 700; }
+    .nav a { color: var(--text); text-decoration: none; font-weight: 600; }
+    .nav-links { display: flex; align-items: center; gap: 18px; }
+    .nav-links a { color: var(--muted); }
+
+    /* Auth layout */
+    .auth-wrap { display: grid; grid-template-columns: 1fr; place-items: center; padding: 42px 0; }
+    .auth-card { width: min(420px, 92vw); background: var(--card); border: 1px solid color-mix(in oklab, var(--text) 16%, transparent); border-radius: 16px; box-shadow: var(--shadow); padding: 22px; }
+    .auth-title { margin: 0 0 6px; font-size: 24px; }
+    .auth-subtitle { margin: 0 0 18px; color: var(--muted); font-size: 14px; }
+
+    .field { margin-bottom: 14px; }
+    .label { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; font-weight: 600; font-size: 14px; }
+    .input-wrap { position: relative; }
+    .input { width: 100%; padding: 12px 14px; padding-right: 44px; background: var(--bg-soft); color: var(--text); border: 1px solid color-mix(in oklab, var(--text) 16%, transparent); border-radius: 12px; outline: none; }
+    .input:focus { border-color: color-mix(in oklab, var(--primary) 30%, transparent); box-shadow: 0 0 0 4px var(--ring); }
+    .toggle-pass { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); background: transparent; border: 0; color: var(--muted); padding: 6px 8px; border-radius: 8px; cursor: pointer; }
+    .toggle-pass:focus { outline: none; box-shadow: 0 0 0 3px var(--ring); }
+
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 6px; margin-bottom: 12px; }
+    .row a { color: var(--muted); text-decoration: none; font-size: 14px; }
+
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 16px; border-radius: 12px; border: 1px solid transparent; text-decoration: none; font-weight: 700; letter-spacing: 0.2px; transition: transform .06s ease, background .2s ease, color .2s ease, border-color .2s ease; cursor: pointer; }
+    .btn:active { transform: translateY(1px); }
+    .btn--primary { width: 100%; justify-content: center; background: linear-gradient(135deg, var(--primary), var(--primary-600)); color: #fff; box-shadow: 0 12px 30px var(--ring); }
+    .btn--ghost { background: transparent; color: var(--text); border-color: color-mix(in oklab, var(--text) 20%, transparent); }
+
+    .divider { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; color: var(--muted); font-size: 12px; margin: 14px 0; }
+    .divider::before, .divider::after { content: ""; height: 1px; background: color-mix(in oklab, var(--text) 16%, transparent); }
+
+    .notice { color: var(--muted); font-size: 12px; margin-top: 10px; }
+    .error { color: var(--danger); font-size: 14px; display: none; margin: 6px 0 0; }
+
+    /* Footer */
+    .site-footer { border-top: 1px solid color-mix(in oklab, var(--text) 16%, transparent); margin-top: 24px; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 0; color: var(--muted); font-size: 14px; }
+
+    @media (max-width: 920px) {
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Bonjour cher utilisateur</h1>
-  <a href="./index.html">Retour à la page d'accueil</a>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <header class="site-header">
+    <div class="container nav" role="navigation" aria-label="Navigation principale">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">M</div>
+        <a href="./index.html">Mon Projet</a>
+      </div>
+      <nav class="nav-links">
+        <a href="./index.html">Accueil</a>
+        <button id="theme-toggle" class="btn btn--ghost" type="button" aria-pressed="false" title="Changer de thème" aria-label="Changer de thème">🌙</button>
+        <a class="btn btn--ghost" href="./index.html">Retour</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenu" class="container" tabindex="-1">
+    <section class="auth-wrap" aria-labelledby="titre-auth">
+      <div class="auth-card" role="region" aria-label="Formulaire de connexion">
+        <h1 id="titre-auth" class="auth-title">Connexion</h1>
+        <p class="auth-subtitle">Renseignez vos identifiants pour accéder à votre espace.</p>
+
+        <form id="login-form" novalidate>
+          <div class="field">
+            <label class="label" for="email">Adresse e‑mail</label>
+            <div class="input-wrap">
+              <input class="input" id="email" name="email" type="email" inputmode="email" autocomplete="email" required placeholder="vous@example.com" aria-describedby="email-help email-error" />
+            </div>
+            <p id="email-help" class="notice">Utilisez l’adresse associée à votre compte.</p>
+            <p id="email-error" class="error" role="alert">Veuillez saisir une adresse e‑mail valide.</p>
+          </div>
+
+          <div class="field">
+            <label class="label" for="password">Mot de passe</label>
+            <div class="input-wrap">
+              <input class="input" id="password" name="password" type="password" autocomplete="current-password" minlength="8" required placeholder="••••••••" aria-describedby="password-help password-error" />
+              <button type="button" class="toggle-pass" aria-controls="password" aria-label="Afficher le mot de passe">Afficher</button>
+            </div>
+            <div class="row">
+              <span id="password-help" class="notice">8 caractères minimum.</span>
+              <a href="#" aria-label="Mot de passe oublié (lien inactif)">Mot de passe oublié ?</a>
+            </div>
+            <p id="password-error" class="error" role="alert">Mot de passe requis (8+ caractères).</p>
+          </div>
+
+          <div class="row" style="margin-top: 6px;">
+            <label style="display:flex; align-items:center; gap:8px; color: var(--muted); font-size: 14px;">
+              <input type="checkbox" name="remember" /> Se souvenir de moi
+            </label>
+          </div>
+
+          <button class="btn btn--primary" type="submit">Se connecter</button>
+
+          <div class="divider" aria-hidden="true">ou</div>
+
+          <a class="btn btn--ghost" href="./index.html">Retour à l’accueil</a>
+
+          <p id="form-message" class="notice" aria-live="polite" style="margin-top:12px;"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>© <span id="year">2025</span> Mon Projet</div>
+      <div><a href="#contenu">Haut de page</a></div>
+    </div>
+  </footer>
+
+  <script>
+    // Mise à jour de l'année
+    (function(){
+      var el = document.getElementById('year');
+      if (el) el.textContent = new Date().getFullYear();
+    })();
+
+    // Basculement de thème (clair/sombre) avec persistance
+    (function(){
+      var storageKey = 'theme';
+      var toggle = document.getElementById('theme-toggle');
+
+      function getPreferred(){
+        var stored = localStorage.getItem(storageKey);
+        if (stored === 'light' || stored === 'dark') return stored;
+        return (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+      }
+      function apply(theme){
+        document.documentElement.setAttribute('data-theme', theme);
+        if (toggle) {
+          toggle.setAttribute('aria-pressed', theme === 'dark');
+          toggle.textContent = theme === 'dark' ? '🌙' : '☀️';
+          toggle.title = 'Changer de thème';
+        }
+      }
+
+      var theme = getPreferred();
+      apply(theme);
+      if (toggle) {
+        toggle.addEventListener('click', function(){
+          theme = (document.documentElement.getAttribute('data-theme') === 'dark') ? 'light' : 'dark';
+          localStorage.setItem(storageKey, theme);
+          apply(theme);
+        });
+      }
+    })();
+
+    // Afficher / masquer le mot de passe
+    (function(){
+      var btn = document.querySelector('.toggle-pass');
+      var input = document.getElementById('password');
+      if (!btn || !input) return;
+      btn.addEventListener('click', function(){
+        var isPassword = input.getAttribute('type') === 'password';
+        input.setAttribute('type', isPassword ? 'text' : 'password');
+        btn.textContent = isPassword ? 'Masquer' : 'Afficher';
+        btn.setAttribute('aria-label', (isPassword ? 'Masquer' : 'Afficher') + ' le mot de passe');
+        input.focus();
+      });
+    })();
+
+    // Validation légère du formulaire (côté client)
+    (function(){
+      var form = document.getElementById('login-form');
+      var email = document.getElementById('email');
+      var password = document.getElementById('password');
+      var msg = document.getElementById('form-message');
+      var emailErr = document.getElementById('email-error');
+      var passErr = document.getElementById('password-error');
+
+      if (!form) return;
+
+      function show(el){ el && (el.style.display = 'block'); }
+      function hide(el){ el && (el.style.display = 'none'); }
+
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        hide(emailErr); hide(passErr); msg.textContent = '';
+
+        var valid = true;
+        if (!email.value || !email.checkValidity()) { show(emailErr); valid = false; }
+        if (!password.value || password.value.length < 8) { show(passErr); valid = false; }
+
+        if (!valid) { msg.textContent = 'Veuillez corriger les erreurs ci-dessus.'; return; }
+
+        // Simulation de soumission
+        msg.textContent = 'Tentative de connexion…';
+        setTimeout(function(){
+          msg.textContent = 'Connexion simulée réussie. (Intégrez ici votre logique de redirection)';
+        }, 800);
+      });
+    })();
+  </script>
 </body>
 </html>

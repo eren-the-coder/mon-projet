@@ -1,12 +1,257 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>accueil</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Accueil • Mon Projet</title>
+  <meta name="description" content="Page d'accueil de Mon Projet. Découvrez les fonctionnalités et accédez à votre espace." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-soft: #111834;
+      --text: #e6e9f0;
+      --muted: #b9bfd1;
+      --primary: #5b8cff;
+      --primary-600: #3c6df0;
+      --card: #0f1530;
+      --ring: rgba(91, 140, 255, 0.45);
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #ffffff;
+        --bg-soft: #f7f9fc;
+        --text: #0f172a;
+        --muted: #4b5563;
+        --primary: #315efb;
+        --primary-600: #2349d8;
+        --card: #ffffff;
+        --ring: rgba(49, 94, 251, 0.2);
+        --shadow: 0 10px 30px rgba(0,0,0,0.08);
+      }
+    }
+
+    /* Thèmes forcés via attribut data-theme */
+    [data-theme="dark"] {
+      --bg: #0b1020;
+      --bg-soft: #111834;
+      --text: #e6e9f0;
+      --muted: #b9bfd1;
+      --primary: #5b8cff;
+      --primary-600: #3c6df0;
+      --card: #0f1530;
+      --ring: rgba(91, 140, 255, 0.45);
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+      --danger: #ff6b6b;
+    }
+    [data-theme="light"] {
+      --bg: #ffffff;
+      --bg-soft: #f7f9fc;
+      --text: #0f172a;
+      --muted: #4b5563;
+      --primary: #315efb;
+      --primary-600: #2349d8;
+      --card: #ffffff;
+      --ring: rgba(49, 94, 251, 0.2);
+      --shadow: 0 10px 30px rgba(0,0,0,0.08);
+      --danger: #e11d48;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; }
+    body {
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 10% -10%, rgba(91,140,255,0.18), transparent 60%),
+                  radial-gradient(900px 500px at 90% -20%, rgba(91,140,255,0.12), transparent 50%),
+                  var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .skip-link {
+      position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden;
+    }
+    .skip-link:focus { left: 16px; top: 16px; width: auto; height: auto; background: var(--primary); color: #fff; padding: 8px 12px; border-radius: 8px; }
+
+    .container { width: min(1100px, 92vw); margin: 0 auto; }
+
+    /* Header */
+    .site-header { position: sticky; top: 0; z-index: 50; backdrop-filter: saturate(150%) blur(8px); background: color-mix(in oklab, var(--bg) 86%, transparent); border-bottom: 1px solid color-mix(in oklab, var(--text) 20%, transparent); }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: 0.3px; }
+    .logo {
+      width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, var(--primary), var(--primary-600)); box-shadow: 0 8px 20px var(--ring);
+      display: grid; place-items: center; color: #fff; font-weight: 700;
+    }
+    .nav a { color: var(--text); text-decoration: none; font-weight: 600; }
+    .nav-links { display: flex; align-items: center; gap: 18px; }
+    .nav-links a { color: var(--muted); }
+    .nav-links a[aria-current="page"] { color: var(--text); }
+
+    /* Hero */
+    .hero { padding: 72px 0 36px; }
+    .hero-inner { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 28px; align-items: center; }
+    .hero h1 { font-size: clamp(28px, 3.2vw, 44px); line-height: 1.15; margin: 0 0 12px; }
+    .subtitle { margin: 0 0 22px; color: var(--muted); font-size: clamp(15px, 2.2vw, 18px); }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 16px; border-radius: 12px; border: 1px solid transparent; text-decoration: none; font-weight: 700; letter-spacing: 0.2px; transition: transform .06s ease, background .2s ease, color .2s ease, border-color .2s ease; }
+    .btn:active { transform: translateY(1px); }
+    .btn--primary { background: linear-gradient(135deg, var(--primary), var(--primary-600)); color: #fff; box-shadow: 0 12px 30px var(--ring); }
+    .btn--ghost { background: transparent; color: var(--text); border-color: color-mix(in oklab, var(--text) 20%, transparent); }
+
+    .showcase { background: var(--card); border: 1px solid color-mix(in oklab, var(--text) 16%, transparent); border-radius: 16px; box-shadow: var(--shadow); padding: 18px; height: 100%; display: grid; place-items: center; }
+    .showcase img { max-width: 100%; border-radius: 10px; display: block; }
+
+    /* Features */
+    .section { padding: 42px 0; }
+    .section h2 { font-size: clamp(22px, 2.6vw, 32px); margin: 0 0 16px; }
+    .muted { color: var(--muted); margin: 0 0 20px; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .card { background: var(--card); border: 1px solid color-mix(in oklab, var(--text) 16%, transparent); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); }
+    .card h3 { margin-top: 8px; margin-bottom: 8px; font-size: 18px; }
+    .badge { display: inline-block; padding: 6px 10px; font-size: 12px; border-radius: 999px; background: color-mix(in oklab, var(--primary) 18%, transparent); color: var(--text); border: 1px solid color-mix(in oklab, var(--primary) 40%, transparent); }
+
+    /* CTA */
+    .cta { background: linear-gradient(145deg, color-mix(in oklab, var(--primary) 15%, transparent), transparent), var(--bg-soft); border: 1px solid color-mix(in oklab, var(--text) 16%, transparent); border-radius: 16px; padding: 24px; display: grid; gap: 14px; box-shadow: var(--shadow); }
+
+    /* Footer */
+    .site-footer { border-top: 1px solid color-mix(in oklab, var(--text) 16%, transparent); margin-top: 48px; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 0; color: var(--muted); font-size: 14px; }
+
+    @media (max-width: 920px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
 </head>
 <body>
-    <h1>Bonjour cher utilisateur</h1>
-    <a href="./login.html">Aller sur la page de connexion</a>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <header class="site-header">
+    <div class="container nav" role="navigation" aria-label="Navigation principale">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">M</div>
+        <a href="./index.html" aria-current="page">Mon Projet</a>
+      </div>
+      <nav class="nav-links">
+        <a href="./index.html" aria-current="page">Accueil</a>
+        <a href="#fonctionnalites">Fonctionnalités</a>
+        <a href="#contact">Contact</a>
+        <button id="theme-toggle" class="btn btn--ghost" type="button" aria-pressed="false" title="Changer de thème" aria-label="Changer de thème">🌙</button>
+        <a class="btn btn--ghost" href="./login.html">Connexion</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenu" class="container" tabindex="-1">
+    <section class="hero" aria-labelledby="titre-hero">
+      <div class="hero-inner">
+        <div>
+          <h1 id="titre-hero">Bonjour et bienvenue</h1>
+          <p class="subtitle">Une base d'accueil moderne et responsive pour démarrer rapidement. Découvrez les fonctionnalités clés et accédez à votre espace en un clic.</p>
+          <div class="actions">
+            <a class="btn btn--primary" href="./login.html" rel="nofollow">Se connecter</a>
+            <a class="btn btn--ghost" href="#fonctionnalites">En savoir plus</a>
+          </div>
+        </div>
+        <div class="showcase" aria-hidden="true">
+          <picture>
+            <source srcset="https://images.unsplash.com/photo-1527443154391-507e9dc6c5cc?q=80&w=1200&auto=format&fit=crop" media="(min-width: 800px)">
+            <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1000&auto=format&fit=crop" alt="Illustration abstraite de productivité" loading="lazy">
+          </picture>
+        </div>
+      </div>
+    </section>
+
+    <section id="fonctionnalites" class="section" aria-labelledby="titre-features">
+      <h2 id="titre-features">Fonctionnalités principales</h2>
+      <p class="muted">Tout ce qu’il vous faut pour commencer efficacement.</p>
+      <div class="grid">
+        <article class="card">
+          <span class="badge" aria-hidden="true">Rapide</span>
+          <h3>Performances optimisées</h3>
+          <p>Chargement léger, styles intégrés et structure claire pour une expérience immédiate, même sur mobile.</p>
+        </article>
+        <article class="card">
+          <span class="badge" aria-hidden="true">Sécurisé</span>
+          <h3>Bonnes pratiques</h3>
+          <p>Balises sémantiques, accessibilité de base et liens explicites pour guider vos utilisateurs.</p>
+        </article>
+        <article class="card">
+          <span class="badge" aria-hidden="true">Simple</span>
+          <h3>Prêt à l’emploi</h3>
+          <p>Modèle facilement personnalisable. Ajoutez vos sections, images et textes en quelques minutes.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="cta" role="region" aria-label="Appel à l'action">
+        <h2>Commencez dès maintenant</h2>
+        <p class="muted">Accédez à votre espace pour retrouver vos informations et poursuivre votre parcours.</p>
+        <div class="actions">
+          <a class="btn btn--primary" href="./login.html">Aller sur la page de connexion</a>
+          <a class="btn btn--ghost" href="#contact">Nous contacter</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section" aria-labelledby="titre-contact">
+      <h2 id="titre-contact">Contact</h2>
+      <p class="muted">Une question ? Écrivez-nous à <a href="mailto:contact@example.com">contact@example.com</a>.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>© <span id="year">2025</span> Mon Projet</div>
+      <div>
+        <a href="#contenu">Haut de page</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Met à jour l'année dans le pied de page
+    (function(){
+      var el = document.getElementById('year');
+      if (el) el.textContent = new Date().getFullYear();
+    })();
+
+    // Basculement de thème (clair/sombre) avec persistance
+    (function(){
+      var storageKey = 'theme';
+      var toggle = document.getElementById('theme-toggle');
+
+      function getPreferred(){
+        var stored = localStorage.getItem(storageKey);
+        if (stored === 'light' || stored === 'dark') return stored;
+        return (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+      }
+      function apply(theme){
+        document.documentElement.setAttribute('data-theme', theme);
+        if (toggle) {
+          toggle.setAttribute('aria-pressed', theme === 'dark');
+          toggle.textContent = theme === 'dark' ? '🌙' : '☀️';
+          toggle.title = 'Changer de thème';
+        }
+      }
+
+      var theme = getPreferred();
+      apply(theme);
+      if (toggle) {
+        toggle.addEventListener('click', function(){
+          theme = (document.documentElement.getAttribute('data-theme') === 'dark') ? 'light' : 'dark';
+          localStorage.setItem(storageKey, theme);
+          apply(theme);
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
